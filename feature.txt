@@ -1,0 +1,1 @@
+This feature adds an advanced logging mechanism to the project.
