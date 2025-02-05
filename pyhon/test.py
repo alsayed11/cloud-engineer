@@ -1,6 +1,6 @@
 import random as diceroll
 
-# Python function to prompt and return user's guess
+# Function to prompt and return user's guess
 def getUserGuess(min_val, max_val):
     while True:
         try:
@@ -16,15 +16,37 @@ def getUserGuess(min_val, max_val):
             print("Invalid input. Please enter a valid number or 'quit' to give up.")
 
 ############################## MAIN application code ######################
-# Simulate a dice being rolled, random result between 1 to 100 (inclusive)
-###########################################################################
-min_val = 1
-max_val = 100
-randomDiceRollResult = diceroll.randint(min_val, max_val)
-max_attempts = 5  # Maximum number of attempts allowed
-attempts = 0
+print("Welcome to the Dice Guessing Game!")
 
-print(f"Welcome to the Dice Guessing Game! You have {max_attempts} attempts to guess the number between {min_val} and {max_val}.")
+# Define difficulty levels
+difficulty_levels = {
+    "easy": {"min_val": 1, "max_val": 10, "max_attempts": 7},
+    "medium": {"min_val": 1, "max_val": 50, "max_attempts": 5},
+    "hard": {"min_val": 1, "max_val": 100, "max_attempts": 3}
+}
+
+# Let the user choose a difficulty level
+while True:
+    difficulty = input("Choose a difficulty level (easy, medium, hard): ").lower()
+    if difficulty in difficulty_levels:
+        break
+    else:
+        print("Invalid difficulty level. Please choose 'easy', 'medium', or 'hard'.")
+
+# Set the game parameters based on the chosen difficulty
+min_val = difficulty_levels[difficulty]["min_val"]
+max_val = difficulty_levels[difficulty]["max_val"]
+max_attempts = difficulty_levels[difficulty]["max_attempts"]
+
+# Ask if the user wants hints
+hints_enabled = input("Would you like hints (too high/too low)? (yes/no): ").lower() == 'yes'
+
+# Simulate a dice being rolled, random result between min_val and max_val (inclusive)
+randomDiceRollResult = diceroll.randint(min_val, max_val)
+
+print(f"Let's begin! You have {max_attempts} attempts to guess the number between {min_val} and {max_val}.")
+
+attempts = 0
 
 while attempts < max_attempts:
     your_guess = getUserGuess(min_val, max_val)
@@ -38,10 +60,13 @@ while attempts < max_attempts:
     if your_guess == randomDiceRollResult:
         print("Correct! You win!")
         break
-    elif your_guess < randomDiceRollResult:
-        print("Nope! Your guess is too low.")
+    elif hints_enabled:
+        if your_guess < randomDiceRollResult:
+            print("Nope! Your guess is too low.")
+        else:
+            print("Nope! Your guess is too high.")
     else:
-        print("Nope! Your guess is too high.")
+        print("Nope! Try again.")
     
     if attempts == max_attempts:
         print(f"Sorry, you've used all {max_attempts} attempts. The correct number was {randomDiceRollResult}.")
